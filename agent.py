@@ -40,7 +40,55 @@ class Agent():
         self.optimizer = optim.Adam(self.qnetwork_local.parameters(), lr=LR)
 
         # Replay memory
-        self.memory = ReplayBuffer
+        self.memory = ReplayBuffer(action_size, BUFFER_SIZE, BATCH_SIZE, seed)
+        # Initialize time step (for updating every UPDATE_EVERY steps)
+        self.t_step = 0
+
+    def step(self, state, action, reward, next_state, done):
+        # Save experience in replay memory
+        self.memory.add(state, action, reward, next_state, done)
+
+        # Learn every UPDATE_EVERY time steps
+        self.t_step = (self.t_step + 1) % UPDATE_EVERY
+        if self.t_step == 0:
+            # If enough samples are available in memory, get random subset and learn
+            if len(self.memory) > BATCH_SIZE:
+                experiences = self.memory.sample()
+                self.learn(experiences, GAMMA)
+
+    def act(self, state, eps=0.):
+        """
+        Returns actions for given state as per current policy
+
+        Params
+        ======
+            state (array_like): current_state
+            eps (float): epsilon, for epsilon-greedy action selection
+        """
+        state = torch.from_numpy(state).float().unsqueeze(0).to(device)
+        self.qnetwork_local.eval()
+        with.torch.no_grad():
+            action_values = self.qnetwork(state)
+        self.qnetwork_local.train()
+
+        # Epsilon-greedy action selection
+        if random.random() > eps:
+            return np.argmax(action_values.cpu().data.numpy())
+        else:
+            return random.choice(np.arange(self.action_size))
+
+    def learn(self, experience, gamma):
+        """ Update value parameters using given batch of experience tuples
+
+        Params
+        ======
+            experiences (Tuple[torch.Tensor]): tuple of (s, a, r, s', done) tuples
+            gamma (float): discount factor
+        """
+        states, actions, rewards, next_states, dones = experiences
+
+        # Get max predicted Q values (for next state) from target model
+        Q_targets_next = self.qnetwork_target(next_states).detach().max(1)[0].unsqueeze(1)
 
 
 
@@ -65,12 +113,12 @@ class ReplayBuffer:
                                     field_names=["state", "action", "reward", "next_state", "done"])
         self.seed = random.seed(seed)
 
-        def add(self, state, action, reward, next_state, done):
-            """Add a new experience to memory"""
-            e = self.experience(state, action, reward, next_state, done)
-            self.memory.append(e)
+    def add(self, state, action, reward, next_state, done):
+        """Add a new experience to memory"""
+        e = self.experience(state, action, reward, next_state, done)
+        self.memory.append(e)
 
-        def sample(self):
+    def sample(self):
         """Randomly sample a batch of experiences from memory"""
         experiences = random.sample(self.memory, k=self.batch_size)
 
@@ -86,3 +134,9 @@ class ReplayBuffer:
             [e.done for e in experiences if e is not None]).astype(np.uint8)).float().to(device)
 
         return (states, actions, rewards, next_states, dones)
+
+    def __len__(self):
+        """Return the current size of internal memory""""
+        return len(self.memory)
+
+
