@@ -20,7 +20,7 @@ device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 class Agent():
     """Interacts with and learns from the environment"""
 
-    def init(self, state_size, action_size, seed):
+    def __init__(self, state_size, action_size, seed):
         """
         Initialize an Agent object
 
@@ -31,11 +31,11 @@ class Agent():
             seed (int): random seed
         """
         self.state_size = state_size
-        self.action_size = action_Size
+        self.action_size = action_size
         self.seed = random.seed(seed)
 
         # Q-Network - TD difference (target - local)
-        self.qnetwork_local = QNetwork(state_Size, action_size, seed).to(device)
+        self.qnetwork_local = QNetwork(state_size, action_size, seed).to(device)
         self.qnetwork_target = QNetwork(state_size, action_size, seed).to(device)
         self.optimizer = optim.Adam(self.qnetwork_local.parameters(), lr=LR)
 
@@ -67,7 +67,7 @@ class Agent():
         """
         state = torch.from_numpy(state).float().unsqueeze(0).to(device)
         self.qnetwork_local.eval()
-        with.torch.no_grad():
+        with torch.no_grad():
             action_values = self.qnetwork(state)
         self.qnetwork_local.train()
 
@@ -93,7 +93,7 @@ class Agent():
         Q_targets = rewards + (gamma * Q_targets_next * (1 - dones))
 
         # Get expected Q values from local model
-        Q_exptected = self.qnetwork_local(states).gather(1, actions)
+        Q_expected = self.qnetwork_local(states).gather(1, actions)
 
         # Compute loss
         loss = F.mse_loss(Q_expected, Q_targets)
@@ -117,7 +117,7 @@ class Agent():
             tau (float): interpolation parameter
         """
         for target_param, local_param in zip(target_model.parameters(), local_model.parameters()):
-            target_param.data.copy_(tau*local_param.data + (1.0=tau)*target_param.data)
+            target_param.data.copy_(tau*local_param.data + (1.0-tau)*target_param.data)
 
 
 class ReplayBuffer:
@@ -164,7 +164,7 @@ class ReplayBuffer:
         return (states, actions, rewards, next_states, dones)
 
     def __len__(self):
-        """Return the current size of internal memory""""
+        """Return the current size of internal memory"""
         return len(self.memory)
 
 
