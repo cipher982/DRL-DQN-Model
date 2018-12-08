@@ -42,9 +42,15 @@ agent = Agent(state_size=state_size, action_size=action_size, seed=seed)
 #state = env.reset()
 for j in range(20):
     action = agent.act(state)
-    env.render()
-    state, reward, done, _ = env.step(action)
+    #env.render()
+    test = env.step(action)
+    #state, reward, done, _ = env.step(action)
+    results = env.step(action)['BananaBrain']
+    state = results.vector_observations
+    reward = results.rewards
+    done = results.local_done
     if done:
+        print("===FINISHED===")
         break
 
 env.close()
