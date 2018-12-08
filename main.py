@@ -39,7 +39,7 @@ score = 0
 agent = Agent(state_size=state_size, action_size=action_size, seed=seed)
 
 # watch an untrained agent
-state = env.reset()
+#state = env.reset()
 for j in range(20):
     action = agent.act(state)
     env.render()
