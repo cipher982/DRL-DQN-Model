@@ -25,7 +25,7 @@ class QNetwork(nn.Module):
 
     def forward(self, state):
         """Build a network that maps state -> action values"""
-        x = F.relu(self,fc1(state))
+        x = F.relu(self.fc1(state))
         x = F.relu(self.fc2(x))
         x = self.fc3(x)  # Action likelihoods
         return x
