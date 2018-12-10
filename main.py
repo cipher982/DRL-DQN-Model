@@ -60,8 +60,9 @@ def dqn(n_episodes=20000, max_t=1000, eps_start=1.0, eps_end=0.01, eps_decay=0.9
         score = 0
         for t in range(max_t):
             action = agent.act(state, eps)
-            results = env.step(action)['BananaBrain']
-            next_state, reward, done = results.vector_observations, results.rewards[0], results.local_done
+            resultss = env.step(action)
+            results= resultss['BananaBrain']
+            next_state, reward, done = results.vector_observations, results.rewards[0], results.local_done[0]
             agent.step(state, action, reward, next_state, done)
             state = next_state
             score += reward
