@@ -2,6 +2,7 @@ import numpy as np
 import gym
 import random
 import torch
+from tqdm import tqdm
 from unityagents import UnityEnvironment
 from dqn_agent import Agent
 from collections import deque
@@ -39,7 +40,7 @@ score = 0
 agent = Agent(state_size=state_size, action_size=action_size, seed=seed)
 
 
-def dqn(n_episodes=20000, max_t=1000, eps_start=1.0, eps_end=0.01, eps_decay=0.995):
+def dqn(n_episodes=2000, max_t=1000, eps_start=1.0, eps_end=0.01, eps_decay=0.995):
     """
     Deep Q-Learning
 
@@ -54,7 +55,7 @@ def dqn(n_episodes=20000, max_t=1000, eps_start=1.0, eps_end=0.01, eps_decay=0.9
     scores = []                        # list containing scores from each episode
     scores_window = deque(maxlen=100)  # last 100 scores
     eps = eps_start                    # initialize epsilon
-    for i_episode in range(1, n_episodes+1):
+    for i_episode in tqdm(range(1, n_episodes+1)):
         state = env.reset()
         state = env_info.vector_observations[0]
         score = 0
