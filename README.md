@@ -16,7 +16,7 @@ Using a simulated Unity environment, this agent learns a policy of collecting ye
 ![Trained Agent][image1]
 
 ##### Reinforcement Learning --> Q-Learning --> Deep Q-Learning
-Under the umbrella of machine learning, we typically describe 3 foundational persepctives:
+Under the umbrella of machine learning, we typically describe 3 foundational perspectives:
 1. Unsupervised Learning
 2. Supervised Learning
 3. Reinforcement Learning
