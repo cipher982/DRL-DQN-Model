@@ -6,6 +6,10 @@
 
 [image_dqn_banana]: https://raw.githubusercontent.com/cipher982/DRL-DQN-Model/master/images/DQN_banana.png "DQN Banana"
 
+[image_q_diagram]: https://raw.githubusercontent.com/cipher982/DRL-DQN-Model/master/images/reinforcement-learning-fig1-700.jpg
+
+[image_q_table]: https://raw.githubusercontent.com/cipher982/DRL-DQN-Model/master/images/screen-shot-2017-09-25-at-6.02.37-pm.png
+
 # Navigating an Agent using a Deep Q-Network
 #### David Rose
 #### 2018-12-11
@@ -25,8 +29,15 @@ Each of these relate to differing methods of finding patterns in data, but the o
 
 The specific model used is referred to as a **Deep Q-Network**. First proposed by [DeepMind](https://deepmind.com/) in 2015, [see paper here in Nature](https://storage.googleapis.com/deepmind-media/dqn/DQNNaturePaper.pdf), it attempted to incorporate deep neural networks and traditional Q-Learning into a unified framework that could better generalize between environments, and deal with the larger complexity of continuous state spaces and visual images (relative to the state space of a game such as chess).
 
-### The basics of a DQN
-We start with the idea of Q-Learning, in which we have a table of possible states and actions *Q[S,A]*, and the expected reward of each combination. When the agent needs to act, it chooses the maximum expected value action for that state, as according to the table. As stated above, this complexity quickly gets out of hand when scaling up environments and we would like to generalize between state/action rewards rather than purely memorizing the past.
+### The basics of a Q-Network
+
+![image_q_diagram]
+
+We start with the traditional method of Q-Learning, in which we have a table of possible states and actions Q[S,A], and the expected reward of each combination. When the agent needs to act, it chooses the maximum expected value action for that state, as according to the Q-table. As stated above, **this complexity quickly gets out of hand when scaling up environments** and we would like to generalize between state/action rewards rather than purely memorizing the past.
+
+As an example: in the table below is a very simple environment in which there are only 3 states and 3 actions. The green circles represent the expected rewards for each combination. While this may be manageable to a human and more complex environments may still be manageable for a computer, eventually the infinitely continuous nature of the real world and the unavoidable issue of exponentially increasing combinations will come with a vengeance.
+
+![image_q_table]
 
 ##### Enter neural networks
 A core idea behind neural networks is pattern fitting, specifically the ability to represent compressed connections from **input --> output**, which in the case of supervised learning may be **image --> cat** or **audio --> text**. In the case of reinforcement learning, we are trying to learn **state --> actions/rewards**. So given a particular state (for example the relative positions of different bananas compared to my agent) the model will output the expected reward for each action of *forward/backward/left/right*. It is expected to learn that if a blue banana is in front of me while a yellow is to the left, the agent will turn left and then head forward.
