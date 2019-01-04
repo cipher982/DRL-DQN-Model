@@ -30,6 +30,15 @@ We start with the idea of Q-Learning, in which we have a table of possible state
 
 ##### Enter neural networks
 A core idea behind neural networks is pattern fitting, specifically the ability to represent compressed connections from **input --> output**, which in the case of supervised learning may be **image --> cat** or **audio --> text**. In the case of reinforcement learning, we are trying to learn **state --> actions/rewards**. So given a particular state (for example the relative positions of different bananas compared to my agent) the model will output the expected reward for each action of *forward/backward/left/right*. It is expected to learn that if a blue banana is in front of me while a yellow is to the left, the agent will turn left and then head forward.
+
+So with these two ideas above we can see how combining them can solve the problems we came across regarding complexity, and the following I think is the most important part to understand:
+
+As opposed to the standard approach of explicitly mapping out a reward to each state/value combination, we can use a neural network as a function approximator.
+
+That is, if there are two locations (states) near each other that continually produce positive rewards, we can generalize that the locations between those two should also produce positive rewards. Now this is a very basic example, but it helps to get the point across.
+
+Below is a diagram of the model that DeepMind used in one of their first attempts at playing through various Atari games. Using the convolutional and fully connected layers, the neural network can progressively learn more-and-more detailed and intricate patterns and connections between the image on the screen, the actions to take, and the expected rewards.
+
 ##### Diagram of Deepmind's DQN for Atari 2600
 ![Deepmind DQN Diagram][image_atari_network]
 In the image of  above you can see a diagram of how the signal passes from the state spaces to various layers of the neural network, and finally to the different action outputs and their corresponding expected rewards.
@@ -39,6 +48,16 @@ In our model we have a more simplified version that uses fully-connected layers,
 * 2 hidden layers (64 nodes each)
 * an output of 4 actions
 
+Here is what a diagram of all the layers, nodes, and connections looks like:
+
+(there may be some weird aliasing going on depending on the screen, the original image had to be scaled down a bit)
+
+See [this GIST by craffel](https://gist.github.com/craffel/2d727968c3aaebd10359) for the code on making this image.
+![DQN Banana][image_dqn_banana]
+
+It looks pretty impressive all laid out like this! But this model is much simpler than most image receiving networks such as the ones for Atari.
+
+Below I have a section of the code used to create the DQN class:
 ```python
 class QNetwork(nn.Module):
     """Actor (Policy) Model"""
@@ -68,11 +87,9 @@ class QNetwork(nn.Module):
         x = self.fc3(x)  # Action likelihoods
         return x
 ```
-##### Diagram of the DQN architecture for this project
-See [this GIST by craffel](https://gist.github.com/craffel/2d727968c3aaebd10359) for the code on making this image.
-![DQN Banana][image_dqn_banana]
 
-#### Possible issues
+That is all a high level overview of the basics of this approach, but by itself it would not work very admirably. So below I outline a couple issues and techniques used to overcome them.
+
 ##### Correlated inputs
 With this model we are feeding a time-series input of frames that are mostly the same and highly correlated each step which violates the assumption of *independent and identically distributed* (**i.i.d.**) inputs. To solve this we implement a couple features:
 * Random sampling of past experience
