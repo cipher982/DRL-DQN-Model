@@ -67,6 +67,7 @@ class Agent():
         """
         state = torch.from_numpy(state).float().unsqueeze(0).to(device)
         self.qnetwork_local.eval()
+        
         with torch.no_grad():
             action_values = self.qnetwork_local(state)
         self.qnetwork_local.train()
