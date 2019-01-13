@@ -1,11 +1,14 @@
+from collections import deque
+
 import numpy as np
 import gym
 import random
 import torch
 from tqdm import tqdm
 from unityagents import UnityEnvironment
+import matplotlib.pyplot as plt
+
 from dqn_agent import Agent
-from collections import deque
 
 env = UnityEnvironment(file_name='Banana.app')
 # env.seed(0)
@@ -55,7 +58,8 @@ def dqn(n_episodes=2000, max_t=1000, eps_start=1.0, eps_end=0.01, eps_decay=0.99
     scores = []                        # list containing scores from each episode
     scores_window = deque(maxlen=100)  # last 100 scores
     eps = eps_start                    # initialize epsilon
-    for i_episode in tqdm(range(1, n_episodes+1)):
+
+    for i_episode in range(1, n_episodes+1):
         state = env.reset()
         state = env_info.vector_observations[0]
         score = 0
@@ -77,12 +81,21 @@ def dqn(n_episodes=2000, max_t=1000, eps_start=1.0, eps_end=0.01, eps_decay=0.99
         if i_episode % 100 == 0:
             print('\rEpisode {}\tAverage Score: {:.2f}'.format(
                 i_episode, np.mean(scores_window)))
-        if np.mean(scores_window) > 15:
+        if np.mean(scores_window) > 13:
             print('\nEnvironment solved in {:d} episodes!\tAverage Score: {:.2f}'.format(
                 i_episode-100, np.mean(scores_window)))
-            torch.save(agent.qnetwork_local.state_dict(), 'checkpoint.pth')
+            torch.save(agent.qnetwork_local.state_dict(), 'checkpoint_test.pth')
             break
     return scores
 
 scores = dqn()
 env.close()
+
+# plot the scores
+fig = plt.figure()
+ax = fig.add_subplot(111)
+plt.plot(np.arange(len(scores)), scores)
+plt.ylabel('Score')
+plt.xlabel('Episode #')
+plt.savefig('model_performance.png')
+plt.show()
