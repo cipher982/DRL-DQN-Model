@@ -171,5 +171,7 @@ In this particular instance, we have a simple environment that consists of 37 di
 
 2. Place the file in the GitHub repository, and unzip (or decompress) the file.
 
-3. Run 'python main.py' in your terminal to begin the training process.
+3. Open CMD/Terminal and run 'pip install -r requirements.txt' 
+
+4. Run 'python main.py' in your terminal to begin the training process.
 
