@@ -10,6 +10,8 @@
 
 [image_q_table]: https://raw.githubusercontent.com/cipher982/DRL-DQN-Model/master/images/screen-shot-2017-09-25-at-6.02.37-pm.png
 
+[image_training_performance]: https://raw.githubusercontent.com/cipher982/DRL-DQN-Model/master/model_performance.png
+
 # Navigating an Agent using a Deep Q-Network
 #### David Rose
 #### 2018-12-11
@@ -160,6 +162,17 @@ In this particular instance, we have a simple environment that consists of 37 di
 - **`1`** - move backward.
 - **`2`** - turn left.
 - **`3`** - turn right.
+
+### Evaluation agent performance in reinforcement learning
+There is no typical standard for identifying when a reinforcement learning agent has solved an environment. It can depend highly on the specific situation and is typically manually identified for each environment. One method is to set a benchmark of reward performance over a certain range of episodes, which for this project is **+13 reward average over 100 episodes** which was solved in 435 episodes when it was run last.
+
+The image below shows the performance plotted from initialization to final episode.
+![image_training_performance]
+
+### Improving future performance
+The standard DQN is an older baseline algorithm (in the realm of reinforcement learning at least) and there are many improvements and new methods out that have built on these ideas. A lot of work has recently gone into **policy-gradient** methods that use a deep neural network to specifically map out action probabilities directly from states. These methods are able to harness the powerful computing power of GPUs better, and work well with more complex environments that may utilize raw pixel-level data.
+
+
 
 ### Getting Started
 
